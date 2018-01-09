@@ -62,7 +62,8 @@ def remove_built_notebook(path, file):
 
 def execute_notebook(path, file):
     file_path = os.path.join(path, file)
-    build_path = os.path.join(BUILD_DIR, path, file)
+    build_path = os.path.join(BUILD_DIR, path)
+    build_file_path = os.path.join(build_path, file)
     if not os.path.exists(build_path):
         os.mkdir(build_path)
 
@@ -76,11 +77,11 @@ def execute_notebook(path, file):
     except CellExecutionError:
         out = None
         msg = 'Error executing the notebook "%s".\n\n' % file_path
-        msg += 'See notebook "%s" for the traceback.' % build_path
+        msg += 'See notebook "%s" for the traceback.' % build_file_path
         logger.error(msg)
         raise
     finally:
-        logger.info('Writing to {}'.format(build_path))
+        logger.info('Writing to {}'.format(build_file_path))
         with open(build_path, mode='wt') as f:
             nbformat.write(nb, f)
 
